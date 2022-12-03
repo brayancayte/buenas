@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/codigo.css">
+    <title>Formulario simple</title>
+</head>
+<body>
+  <img src="./image/LOGO_MALOSIN-removebg-preview.png" alt="">
+<div class="contenedor">
+  <p id="titulo">LLENA TUS DATOS PARA INGRESAR A MI PAGINA<span>&#160;</span></p>
+</div>
+  <form action="" id="registrate">
+    <h1>REGISTRATE</h1>
+    <P>EMAIL</P>
+    <input type="email" name="" id="email"> <br>
+    <p>CONTRASEÑA</p>
+    <input type="password" name="" id="pass"> <br> <br>
+    <button id="ingresar">INGRESAR</button>
+    <button type="reset" id="limpiar" onclick="limpiar()">LIMPIAR</button>
+  </form>
+
+  <div id="sesion">
+    <h1>INICIAR SESION</h1>
+    <p>ESCRIBA SU DIRECCION DE CORREO Y CONTRASEÑA PARA INGRESAR</p>
+   <input type="email" name="" id="email1" placeholder="CORREO"> <br> <br>
+    <input type="password" name="" id="pass1" placeholder="CONTRASEÑA"> <br> <br> <br>
+    <button id="acceder">INICIAR</button>
+    <button id="google">INICIAR SESION DESDE GOOGLE</button>
+  </div>
+<br>
+
+ <!-- AQUI ESTA TODO EL CODIGO DE JAVA SCRIPT -->
+ <!-- _____________________________________________________________________________________________________ -->
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        // creamos una nueva cuenta
+        import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+        // import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyADk_Ak2eZTP373JX38ygP3Pm7MLqGsGqI",
+          authDomain: "autentificacion-20239.firebaseapp.com",
+          projectId: "autentificacion-20239",
+          storageBucket: "autentificacion-20239.appspot.com",
+          messagingSenderId: "1091004404037",
+          appId: "1:1091004404037:web:ab8ea2876f232dfe4f2e2c"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider(app);
+        
+        //conectamos con el ID y obtenemos los valores
+        document.getElementById("ingresar").addEventListener("click", function(){
+          //voy a obtener los valores
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("pass").value;
+
+          //Realizo la conexion de pagina web a firebase
+          
+
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+    alert("tu cuenta esta creada en firebase")
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+    alert("tu cuenta no se ha creado por falta de datos o ya esta registrado")
+  });
+        })
+//conectamos con el ingreso de sesion
+        document.getElementById("acceder").addEventListener("click", function(){
+          const email1 = document.getElementById("email1").value;
+          const pass1 = document.getElementById("pass1").value;
+
+  signInWithEmailAndPassword(auth, email1, pass1)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+    alert("tu cuenta esta activa")
+    // // para que aparesca una pagina de internet
+    // window.open("https://www.youtube.com/","mi pagina favorita","width=300 height=200")
+
+    //aparesca una pagina propia
+    window.open("https://caytesite.pe/?fbclid=IwAR2kQno7Fk5cq4vP-K6zAkKjfMRbNtmqzCuvCJhpDFO31Ail3hlRaoweDnQ")
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert("esta cuenta no esta registrada")
+  });
+        })
+//creamos una funcion para limpiar todo el contenido del formulario
+  function limpiar(){
+    document.getElementById("form1").reset();
+  }
+
+  //aqui hacemos conectamos una funcion para conectar con el boton de google
+  document.getElementById("google").addEventListener("click", function(){
+    signInWithRedirect(auth, provider);
+    
+    getRedirectResult(auth)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+
+  })
+      </script>
+      
+      <footer>
+        <p>MAYCOL BRAYAN QUISPE CAYTE</p>
+      </footer>
+</body>
+</html>
